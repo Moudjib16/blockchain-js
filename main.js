@@ -43,3 +43,14 @@ var isvalidNewBlock = (newBlock, previousBlock) => {
     return true;
 }
 
+// in case of conflict between two chains we choose the longest chain 
+
+var replaceChain = (newBlocks) => {
+    if (isvalidNewBlock(newBlocks) && newBlocks.length > blockchain.length) {
+        console.log("received blockchain is valid, replacing current blockchain with recieved blockchain");
+        blockchain = newBlocks;
+        broadcast(responseLatestMsg());
+    } else {
+        console.log("received blcokchain invalid");
+    }
+}
