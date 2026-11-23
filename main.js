@@ -8,7 +8,7 @@ const initialPeers = process.env.PEERS ? process.env.PEERS.split(",") : [];
 
 
 class Block {
-    constructor(index, previousHash, data, timestamp, hash) {
+    constructor(index, previousHash, timestamp, data, hash) {
         this.index = index;
         this.previousHash = previousHash.toString();
         this.data = data;
@@ -26,7 +26,7 @@ var generateNextBlock = (blockData) => {
     var nextIndex = previousBlock.index + 1;
     var nextTimestamp = new Date().getTime() / 1000;
     var nextHash = calculateHash(nextIndex, previousHash.hash, nextTimestamp, blockData);
-    return new Block(nextIndex, previousHash, blockData, nextTimestamp, nextHash)
+    return new Block(nextIndex, previousHash, nextTimestamp, blockData, nextHash)
 }
 
 // First block of the Blockchain is "genesis-block" which is hard coded
