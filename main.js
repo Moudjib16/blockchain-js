@@ -1,3 +1,12 @@
+const crypto = require("crypto");
+const express = require("express");
+const WebSocket = require("ws");
+
+const http_port = process.env.HTTP_PORT || 3001;
+const p2p_port  = process.env.P2P_PORT  || 6001;
+const initialPeers = process.env.PEERS ? process.env.PEERS.split(",") : [];
+
+
 class Block {
     constructor(index, previousHash, data, timestamp, hash) {
         this.index = index;
