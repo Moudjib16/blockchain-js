@@ -54,3 +54,8 @@ var replaceChain = (newBlocks) => {
         console.log("received blcokchain invalid");
     }
 }
+
+var initHttpServer = () => {
+    var app = Express()
+    
+}
