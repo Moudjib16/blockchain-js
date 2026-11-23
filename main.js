@@ -27,3 +27,19 @@ var getGenesisBlock = () => {
 };
 
 var blockchain = [getGenesisBlock()];
+
+var isvalidNewBlock = (newBlock, previousBlock) => {
+    if (previousBlock.index + 1 !== newBlock.index) {
+        console.log("invalid index");
+        return false;
+    } else if (previousBlock.hash !== newBlock.previousHash) {
+        console.log("invalid previous hash");
+        return false;
+    } else if (calculateHashForBlock(newBlock) !== newBlock.hash) {
+        console.log("invalid hash");
+        return false;
+    }
+
+    return true;
+}
+
