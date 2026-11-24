@@ -89,7 +89,8 @@ var initMessageHandler = (ws) => {
 var initErrorHandler = (ws) => {
     var closeConnection = (ws) => {
         console.log('connection failed to peer: ' + ws.url);
-        sockets.splice(sockets.indexOf(ws), 1);
+        var i = sockets.indexOf(ws);
+        if (i !== -1) sockets.splice(i, 1);
     };
     ws.on('close', () => closeConnection(ws));
     ws.on('error', () => closeConnection(ws));
