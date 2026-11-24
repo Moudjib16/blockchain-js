@@ -1,4 +1,28 @@
 {
+  "name": "blockchain-js",
+  "version": "1.0.0",
+  "description": "A minimal peer-to-peer blockchain in Node.js with an HTTP API and WebSocket node syncing.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [
+    "blockchain",
+    "p2p",
+    "websocket",
+    "express",
+    "nodejs",
+    "educational"
+  ],
+  "author": "Moudjib16",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Moudjib16/blockchain-js.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "express": "^5.3.0",
     "ws": "^8.23.0"
