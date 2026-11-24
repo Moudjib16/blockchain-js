@@ -11,11 +11,48 @@ class Block {
     constructor(index, previousHash, timestamp, data, hash) {
         this.index = index;
         this.previousHash = previousHash.toString();
-        this.data = data;
         this.timestamp = timestamp;
-        this.hash = hash;
+        this.data = data;
+        this.hash = hash.toString();
     }
 }
+
+var sockets = [];
+var messageType = {
+    QUERY_LATEST : 0,
+    QUERY_ALL : 1,
+    REPONSE_BLOCKCHAIN : 2
+}
+
+// First block of the Blockchain is "genesis-block" which is hard coded
+
+var getGenesisBlock = () => {
+    return new Block(0, "0", 1795456048, "genesis block", "1366e1f40158e1f0b6474cfed3d601130f9cb0b23498f571577ad6bc2b4a02ad");
+};
+
+
+var initHttpServer = () => {
+    var app = express();
+    app.use(express.json());
+
+    app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
+    app.post('/mineBlock', (req, res) => {
+        var newBlock = generateNextBlock(req.body.data);
+        addBlock(newBlock);
+        broadcast(responseLatestMsg());
+        console.log('block added: ' + JSON.stringify(newBlock));
+        res.send();
+    });
+    app.get('/peers', (req, res) => {
+        res.send(sockets.map(s => s._socket.remoteAddress + ':' + s._socket.remotePort));
+    });
+    app.post('/addPeer', (req, res) => {
+        connectToPeers([req.body.peer]);
+        res.send();
+    });
+    app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
+};
+
 
 var calculateHash = (index, previousHash, timestamp, data) => {
     return CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
@@ -29,11 +66,6 @@ var generateNextBlock = (blockData) => {
     return new Block(nextIndex, previousHash, nextTimestamp, blockData, nextHash)
 }
 
-// First block of the Blockchain is "genesis-block" which is hard coded
-
-var getGenesisBlock = () => {
-    return new Block(0, "0", 1795456048, "genesis block", "f4463ed15663d3f5bbcc8c59f74eeff7a3d9ff0ebfec2ffae0503f4984b7c09a");
-};
 
 var blockchain = [getGenesisBlock()];
 
@@ -62,28 +94,4 @@ var replaceChain = (newBlocks) => {
     } else {
         console.log("received blcokchain invalid");
     }
-}
-
-var initHttpServer = () => {
-    var app = Express()
-    app.use(bodyparser.json());
-
-    app.get('/blocks', (req,res) => res.send(JSON.stringify(blockchain)));
-    app.post('/mineBlock', (req,res) => {
-        var newBlock = generateNextBlock(req.body.data);
-        addblock(newBlock);
-        broadcast(responseLatestMsg());
-        console.log('block added' + JSON.stringify(newBlock));
-        res.send();
-    });
-    app.get('/peers', (req,res) => {
-        res.send(sockets.map(s => s._socket.remoteAddress + ":" + s._socket.remotePort));
-    });
-    app.post("/addPeer", (req,res)=> {
-        connectToPeers([req.body.peer]);
-        res.send();
-    })
-    app.listen(http_port, () => {
-        console.log("listening on port " + http_port);
-    });
 }
